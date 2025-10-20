@@ -93,6 +93,15 @@ Trained a **KNN classifier**, evaluated it, and optimized its hyperparameters to
   - Seaborn  
 
 ---
+##  Saved Model
+
+The trained KNN model is saved using **Joblib**:
+
+`python
+import joblib
+knn_model = joblib.load('models/knn_mnist_model.pkl')
+y_pred = knn_model.predict(X_test)`
+
 ##  Author  
 
 **Lavan kumar Konda**  
