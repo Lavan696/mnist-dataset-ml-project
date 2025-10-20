@@ -93,7 +93,14 @@ Trained a **KNN classifier**, evaluated it, and optimized its hyperparameters to
   - Seaborn  
 
 ---
+##  Author  
 
+**Lavan kumar Konda**  
+-  Student at NIT Andhra Pradesh  
+-  Passionate about Data Science, Machine Learning, and AI  
+- 🔗 [LinkedIn](www.linkedin.com/in/lavan-kumar-konda)
+  
+---
 ##  How to Run  
 
 1. **Clone the repository**  
