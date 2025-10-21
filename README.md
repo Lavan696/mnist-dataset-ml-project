@@ -1,87 +1,97 @@
-#  MNIST Handwritten Digit Classification using K-Nearest Neighbors (KNN)  
+#  MNIST Handwritten Digit Classification using K-Nearest Neighbors (KNN)
 
 This project classifies handwritten digits from the **MNIST dataset** using a **K-Nearest Neighbors (KNN) classifier**.  
-The dataset was taken from **OpenML**, and the model was implemented using **Scikit-learn, Pandas, NumPy, Matplotlib, and Seaborn**.  
+The dataset was fetched from **OpenML**, and the model was implemented using **Scikit-learn, NumPy, Pandas, Matplotlib, and Seaborn**.  
 
 ---
 
 ##  Project Overview  
 
-The goal of this project is to correctly identify digits (0–9) from images of handwritten numbers.  
-Trained a **KNN classifier**, evaluated it, and optimized its hyperparameters to achieve high accuracy and robust performance metrics.  
+The goal of this project is to accurately identify handwritten digits (0–9) using pixel intensity values.  
+We trained a **KNN classifier**, optimized its hyperparameters, and performed **data augmentation** to improve the model’s robustness and accuracy.  
 
 ---
 
 ##  Steps Followed  
 
 1. **Data Loading and Exploration**  
-   - Loaded MNIST dataset from `fetch_openml`  
-   - Explored **features** (`X`) and **labels** (`y`)  
-   - Displayed value counts and feature names  
+   - Loaded the MNIST dataset using `fetch_openml('mnist_784')`  
+   - Extracted feature matrix `X` and label vector `y`  
+   - Displayed dataset information and feature names  
 
-2. **Visualization of Digit Images**  
-   - Displayed a single digit  
-   - Displayed multiple sample images (first 100 digits)  
+2. **Visualization of Digits**  
+   - Displayed a single digit and a grid of multiple digits using Matplotlib  
 
-3. **Train-Test Split**  
-   - Split dataset into **training set (60,000 samples)** and **test set (10,000 samples)**  
+3. **Data Augmentation (Shifting Images)**  
+   - Shifted images in **left, right, up, and down** directions by one pixel each  
+   - Combined the original and shifted images to form an augmented dataset  
+   - Resulting dataset size increased **5×**, improving generalization
+   - This simple yet effective augmentation significantly improved model generalization by
+     helping it learn **spatial invariance**—the ability to recognize digits even when slightly moved  
 
-4. **Model Training (Before Hyperparameter Tuning)**  
-   - Trained **default KNN classifier**  
-   - Evaluated using **10-fold cross-validation**  
+4. **Train-Test Split**  
+   - Used `train_test_split` with a test ratio of **0.2**  
 
-5. **Metrics Before Hyperparameter Tuning**  
+5. **Model Training (Before Hyperparameter Tuning)**  
+   - Trained a basic **KNN classifier**  
+   - Evaluated using **5-fold cross-validation**  
+
+---
+
+## Metrics Before Hyperparameter Tuning  
 
 | Metric                      | Value  |
 |-----------------------------|--------|
-| Cross-Validation Mean Score | 97.00% |
-| Test Accuracy               | 96.88% |
-| Precision (Weighted)        | 96.90% |
-| Recall (Weighted)           | 96.88% |
-| F1 Score (Weighted)         | 96.87% |
+| Cross-Validation Mean Score | 96.87% |
 
-6. **Hyperparameter Tuning**  
-   - Optimized KNN with `weights='distance'`, `n_neighbors=4`, and `n_jobs=-1`  
-   - Retrained the model on the training set  
+---
 
-7. **Metrics After Hyperparameter Tuning**  
+##  Hyperparameter Tuning  
+
+- Tuned model using `weights='distance'` and `n_neighbors=4`  
+- Retrained the classifier on the augmented dataset  
+
+---
+
+##  Metrics After Hyperparameter Tuning  
 
 | Metric                      | Value  |
 |-----------------------------|--------|
-| Cross-Validation Mean Score | 97.28% |
-| Test Accuracy               | 97.14% |
-| Precision (Weighted)        | 97.15% |
-| Recall (Weighted)           | 97.14% |
-| F1 Score (Weighted)         | 97.13% |
-| ROC-AUC Score               | 99.43% |
-| Log Loss                    | 0.404  |
-| Cohen Kappa Score           | 96.82% |
-| Matthews Corr. Coefficient  | 96.82% |
-| Top-3 Accuracy              | 99.15% |
+| Cross-Validation Mean Score | 98.35% |
+| Test Accuracy               | 98.59% |
+| Precision (Weighted)        | 98.60% |
+| Recall (Weighted)           | 98.59% |
+| F1 Score (Weighted)         | 98.59% |
+| ROC-AUC (OVR)               | 99.80% |
+| Log Loss                    | 0.156  |
+| Cohen Kappa Score           | 98.43% |
+| Matthews Corr. Coefficient  | 98.43% |
+| Top-2 Accuracy              | 99.62% |
 
 ---
 
-## Visualizations  
+##  Key Insights  
 
-- **Sample Digit Images** – Displayed single and multiple digits  
-- **Confusion Matrix** – Before and after hyperparameter tuning  
-- **Calibration Curve** – Predicted vs true probability  
-- **ROC Curve** – Multi-class ROC for each digit  
-- **Precision-Recall Curve** – Multi-class precision-recall curves  
-- **Classification Report Heatmap** – Weighted metrics per class  
-- **Misclassified Digits** – Visual display of 25 misclassified images  
-
----
-
-## Key Insights  
-
-- Hyperparameter tuning improved accuracy, precision, recall, and F1-score slightly but consistently.  
-- ROC-AUC of 99.43% indicates excellent separability between digit classes.  
-- Top-3 accuracy of 99.15% shows that in most cases, the true digit is among the top 3 predicted classes.  
-- Confusion matrix and misclassified images provide insight into which digits are most commonly confused.  
+- **Data Augmentation** played a crucial role in improving accuracy and robustness.  
+  By shifting images in multiple directions, the model learned to recognize digits even when they appear slightly displaced — a common trait in real-world handwriting.  
+  This helped increase the **cross-validation mean score from 96.87% to 98.35%**, proving the power of data diversity.  
+- **KNN with distance-based weighting** provided better performance compared to uniform weighting.  
+- The **ROC-AUC score of 99.80%** indicates exceptional class separability.  
+- The **Top-2 accuracy of 99.62%** suggests that even when the model misclassifies, the true label is almost always among its top predictions.  
+- Overall, this approach demonstrates how simple preprocessing and augmentation can drastically improve traditional ML models without deep learning.  
 
 ---
+##  Visualizations  
 
+- **Sample Digit Images** – Displayed individual and grid-view digits  
+- **Confusion Matrix** – Visualized classification performance   
+- **Calibration Curve** – Showed predicted vs true probability alignment  
+- **ROC Curve** – Multi-class ROC visualization with AUC for each digit  
+- **Precision-Recall Curve** – Visualized tradeoff between precision and recall for each class  
+- **Classification Report Heatmap** – Detailed view of per-class metrics  
+- **Misclassified Digits** – Displayed 25 wrongly classified samples for insight  
+
+---
 ##  Tech Stack  
 
 - **Programming Language:** Python 
@@ -93,14 +103,15 @@ Trained a **KNN classifier**, evaluated it, and optimized its hyperparameters to
   - Seaborn  
 
 ---
-##  Saved Model
+## Model Saving  
 
-The trained KNN model is saved using **Joblib**:
+The final trained model was saved using **Joblib** for easy reuse:  
 
 `python
 import joblib
-knn_model = joblib.load('models/knn_mnist_model.pkl')
-y_pred = knn_model.predict(X_test)`
+joblib.dump(kn_best_clf, 'knn_best_model.pkl')
+print('Model saved successfully!')`
+
 
 ##  Author  
 
